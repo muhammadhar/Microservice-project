@@ -1,7 +1,9 @@
 name: FINAL TEST
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - develop
 
 jobs:
   test:
