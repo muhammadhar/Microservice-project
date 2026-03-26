@@ -1,13 +1,17 @@
-name: Docker Login Test
+name: Docker Login CI/CD
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - develop       # runs on develop branch
+      - feature/*     # runs on any feature branch
 
 jobs:
-  test-login:
+  docker-login-test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Login to Docker Hub
