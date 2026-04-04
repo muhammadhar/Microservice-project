@@ -1,0 +1,51 @@
+name: Microservices CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Login to Docker Hub
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 3. Pull latest images
+      - name: Pull User Service
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/user-service:latest
+
+      - name: Pull Order Service
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/order-service:latest
+
+      - name: Pull Product Service
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/product-service:latest
+
+      # 4. Run containers (simple local deployment simulation)
+      - name: Run User Service
+        run: |
+          docker stop user-service || true
+          docker rm user-service || true
+          docker run -d --name user-service -p 3001:3001 ${{ secrets.DOCKER_USERNAME }}/user-service:latest
+
+      - name: Run Order Service
+        run: |
+          docker stop order-service || true
+          docker rm order-service || true
+          docker run -d --name order-service -p 3002:3002 ${{ secrets.DOCKER_USERNAME }}/order-service:latest
+
+      - name: Run Product Service
+        run: |
+          docker stop product-service || true
+          docker rm product-service || true
+          docker run -d --name product-service -p 3003:3003 ${{ secrets.DOCKER_USERNAME }}/product-service:latest
