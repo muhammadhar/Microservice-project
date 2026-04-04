@@ -1,4 +1,4 @@
-name: Microservices CI/CD
+name: Microservices CI/CD v1
 
 on:
   push:
